@@ -10,7 +10,7 @@ using WebApplication1.Repositories;
 
 namespace WebApplication1.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/doctors")]
     [ApiController]
     public class DoctorsController : ControllerBase
     {
@@ -20,10 +20,10 @@ namespace WebApplication1.Controllers
 
         private const int _pageSize = 10;
 
-        public DoctorsController(IDoctorsRepository repository, ResponseDto response)
+        public DoctorsController(IDoctorsRepository repository)
         {
             _repository = repository;
-            _response = response;
+            _response = new ResponseDto();
         }
 
         [HttpGet("{sort}/{page}")]
@@ -57,12 +57,9 @@ namespace WebApplication1.Controllers
                     _ => result
                 };
 
-                if (page != 0)
-                {
-                    result = result.Skip((page - 1) * _pageSize).Take(_pageSize).ToList();
-                }
-
-                return result;
+                return page > 0 
+                    ? result.Skip((page - 1) * _pageSize).Take(_pageSize).ToList() 
+                    : result;
             }
             catch (Exception e)
             {

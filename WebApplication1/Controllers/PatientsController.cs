@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApplication1.Migrations;
@@ -11,7 +12,7 @@ using WebApplication1.Repositories;
 
 namespace WebApplication1.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/patients")]
     [ApiController]
     public class PatientsController : ControllerBase
     {
@@ -21,14 +22,14 @@ namespace WebApplication1.Controllers
 
         private const int _pageSize = 10;
 
-        public PatientsController(IPatientsRepository repository, ResponseDto response)
+        public PatientsController(IPatientsRepository repository)
         {
             _repository = repository;
-            _response = response;
+            _response = new ResponseDto();
         }
 
         [HttpGet("{sort}/{page}")]
-        public async Task<IEnumerable<GetPatientsDto>> Get(string sort = "", int page = 0)
+        public async Task<IEnumerable<GetPatientsDto>> Get(string sort, int page)
         {
             try
             {
@@ -60,9 +61,9 @@ namespace WebApplication1.Controllers
                     _ => result
                 };
 
-                return page == 0
-                    ? result
-                    : result.Skip((page - 1) * _pageSize).Take(_pageSize).ToList();
+                return page > 0
+                    ? result.Skip((page - 1) * _pageSize).Take(_pageSize).ToList()
+                    : result;
             }
             catch (Exception e)
             {

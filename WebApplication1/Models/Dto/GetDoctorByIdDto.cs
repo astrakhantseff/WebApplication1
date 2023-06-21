@@ -4,12 +4,9 @@ namespace WebApplication1.Models.Dto
 {
     public class GetDoctorByIdDto
     {
-        public string Family { get; set; }
-        public string FirstName { get; set; }
-        public string SecondName { get; set; }
-        public string Address { get; set; }
-        public DateTime DateOfBirth { get; set; }
-        public bool Sex { get; set; }
-        public int? NumberOfRegion { get; set; }
+        public string FullName { get; set; }
+        public int CabinetId { get; set; }
+        public int SpecialtyId { get; set; }
+        public int? RegionId { get; set; }
     }
 }

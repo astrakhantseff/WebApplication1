@@ -36,8 +36,7 @@ namespace WebApplication1
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("doctorsApi", new OpenApiInfo { Title = "DoctorsApi", Version = "v1" });
-                c.SwaggerDoc("patientsApi", new OpenApiInfo { Title = "PatientsApi", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "DoctorsApi", Version = "v1" });
             });
         }
 
