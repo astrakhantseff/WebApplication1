@@ -28,8 +28,8 @@ namespace WebApplication1.Controllers
             _response = new ResponseDto();
         }
 
-        [HttpGet("{sort}/{page}")]
-        public async Task<IEnumerable<GetPatientsDto>> Get(string sort, int page)
+        [HttpGet]
+        public async Task<IEnumerable<GetPatientsDto>> Get([FromQuery] string sort, [FromQuery] int page)
         {
             try
             {
@@ -49,7 +49,7 @@ namespace WebApplication1.Controllers
                                                          NumberOfRegion = region.NumberOfRegion
                                                      };
 
-                result = sort.ToLower() switch
+                result = sort?.ToLower() switch
                 {
                     "family" => result.OrderBy(column => column.Family),
                     "firstname" => result.OrderBy(column => column.FirstName),

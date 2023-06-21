@@ -26,8 +26,8 @@ namespace WebApplication1.Controllers
             _response = new ResponseDto();
         }
 
-        [HttpGet("{sort}/{page}")]
-        public async Task<IEnumerable<GetDoctorsDto>> Get(string sort, int page)
+        [HttpGet]
+        public async Task<IEnumerable<GetDoctorsDto>> Get([FromQuery]string sort, [FromQuery] int page)
         {
             try
             {
@@ -48,7 +48,7 @@ namespace WebApplication1.Controllers
                                                         NameOfSpecialty = specialty.NameOfSpecialty
                                                     };
 
-                result = sort.ToLower() switch
+                result = sort?.ToLower() switch
                 {
                     "fullname" => result.OrderBy(column => column.FullName),
                     "cabinet" => result.OrderBy(column => column.NumberOfCab),
