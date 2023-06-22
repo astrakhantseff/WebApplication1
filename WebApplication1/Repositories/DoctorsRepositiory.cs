@@ -84,20 +84,17 @@ namespace WebApplication1.Repositories
 
         public async Task<IEnumerable<Cabinet>> GetCabinets()
         {
-            List<Cabinet> cabinets = await _db.Cabinets.ToListAsync();
-            return cabinets;
+            return await _db.Cabinets.ToListAsync();
         }
 
         public async Task<IEnumerable<Region>> GetRegions()
         {
-            List<Region> regions = await _db.Regions.ToListAsync();
-            return regions;
+            return await _db.Regions.ToListAsync();
         }
 
         public async Task<IEnumerable<Specialty>> GetSpecialties()
         {
-            List<Specialty> specialties = await _db.Specialties.ToListAsync();
-            return specialties;
+            return await _db.Specialties.ToListAsync();
         }
     }
 }
