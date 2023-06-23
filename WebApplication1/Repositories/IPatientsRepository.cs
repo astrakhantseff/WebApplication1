@@ -7,7 +7,7 @@ namespace WebApplication1.Repositories
 {
     public interface IPatientsRepository
     {
-        Task<IEnumerable<PatientsDto>> GetPatients();
+        Task<IEnumerable<PatientsDto>> GetPatients(int page);
         Task<GetPatientByIdDto> GetPatientById(int id);
         Task<PatientsDto> UpdatePatient(PatientsDto doctorDto);
         Task<PatientsDto> CreatePatient(PatientsDto doctorDto);

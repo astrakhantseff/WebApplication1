@@ -12,6 +12,8 @@ namespace WebApplication1.Repositories
 {
     public class PatientsRepository : IPatientsRepository
     {
+        private const int _pageSize = 10;
+
         private readonly ApplicationDbContext _db;
 
         private readonly IMapper _mapper;
@@ -22,9 +24,15 @@ namespace WebApplication1.Repositories
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<PatientsDto>> GetPatients()
+        public async Task<IEnumerable<PatientsDto>> GetPatients(int page)
         {
-            List<Patient> patients = await _db.Patients.ToListAsync();
+            List<Patient> patients = page > 0
+                ? await _db.Patients
+                    .Skip((page - 1) * _pageSize)
+                    .Take(_pageSize)
+                    .ToListAsync()
+                : await _db.Patients
+                    .ToListAsync();
             return _mapper.Map<List<PatientsDto>>(patients);
         }
 

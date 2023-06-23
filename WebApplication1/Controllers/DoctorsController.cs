@@ -18,8 +18,6 @@ namespace WebApplication1.Controllers
 
         private readonly ResponseDto _response;
 
-        private const int _pageSize = 10;
-
         public DoctorsController(IDoctorsRepository repository)
         {
             _repository = repository;
@@ -31,7 +29,8 @@ namespace WebApplication1.Controllers
         {
             try
             {
-                IEnumerable<DoctorsDto> doctors = await _repository.GetDoctors();
+                IEnumerable<DoctorsDto> doctors = await _repository.GetDoctors(page);
+
                 IEnumerable<Cabinet> cabinets = await _repository.GetCabinets();
                 IEnumerable<Region> regions = await _repository.GetRegions();
                 IEnumerable<Specialty> specialties = await _repository.GetSpecialties();
@@ -47,19 +46,8 @@ namespace WebApplication1.Controllers
                                                         NumberOfRegion = region.NumberOfRegion,
                                                         NameOfSpecialty = specialty.NameOfSpecialty
                                                     };
-
-                result = sort?.ToLower() switch
-                {
-                    "fullname" => result.OrderBy(column => column.FullName),
-                    "cabinet" => result.OrderBy(column => column.NumberOfCab),
-                    "region" => result.OrderBy(column => column.NumberOfRegion),
-                    "specialty" => result.OrderBy(column => column.NameOfSpecialty),
-                    _ => result
-                };
-
-                return page > 0 
-                    ? result.Skip((page - 1) * _pageSize).Take(_pageSize).ToList() 
-                    : result;
+                
+                return result.Sort(sort);
             }
             catch (Exception e)
             {

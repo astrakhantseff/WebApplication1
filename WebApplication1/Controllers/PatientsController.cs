@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApplication1.Migrations;
 using WebApplication1.Models;
 using WebApplication1.Models.Dto;
 using WebApplication1.Repositories;
@@ -33,7 +30,8 @@ namespace WebApplication1.Controllers
         {
             try
             {
-                IEnumerable<PatientsDto> patients = await _repository.GetPatients();
+                IEnumerable<PatientsDto> patients = await _repository.GetPatients(page);
+
                 IEnumerable<Region> regions = await _repository.GetRegions();
 
                 IEnumerable<GetPatientsDto> result = from patient in patients
@@ -49,21 +47,7 @@ namespace WebApplication1.Controllers
                                                          NumberOfRegion = region.NumberOfRegion
                                                      };
 
-                result = sort?.ToLower() switch
-                {
-                    "family" => result.OrderBy(column => column.Family),
-                    "firstname" => result.OrderBy(column => column.FirstName),
-                    "secondname" => result.OrderBy(column => column.SecondName),
-                    "address" => result.OrderBy(column => column.Address),
-                    "dateofbirth" => result.OrderBy(column => column.DateOfBirth),
-                    "sex" => result.OrderBy(column => column.Sex),
-                    "numberofregion" => result.OrderBy(column => column.NumberOfRegion),
-                    _ => result
-                };
-
-                return page > 0
-                    ? result.Skip((page - 1) * _pageSize).Take(_pageSize).ToList()
-                    : result;
+                return result.Sort(sort);
             }
             catch (Exception e)
             {
@@ -72,7 +56,6 @@ namespace WebApplication1.Controllers
                 return null;
             }
         }
-
 
         [HttpGet("{id}")]
         public async Task<GetPatientByIdDto> GetById(int id)
