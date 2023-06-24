@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using WebApplication1.Models;
 using WebApplication1.Models.Dto;
@@ -17,8 +16,6 @@ namespace WebApplication1.Controllers
 
         private readonly ResponseDto _response;
 
-        private const int _pageSize = 10;
-
         public PatientsController(IPatientsRepository repository)
         {
             _repository = repository;
@@ -26,28 +23,11 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<GetPatientsDto>> Get([FromQuery] string sort, [FromQuery] int page)
+        public async Task<IEnumerable<GetPatientsDto>> Get([FromQuery] int page, [FromQuery] string sort)
         {
             try
             {
-                IEnumerable<PatientsDto> patients = await _repository.GetPatients(page);
-
-                IEnumerable<Region> regions = await _repository.GetRegions();
-
-                IEnumerable<GetPatientsDto> result = from patient in patients
-                                                     join region in regions on patient.RegionId equals region.Id
-                                                     select new GetPatientsDto()
-                                                     {
-                                                         Family = patient.Family,
-                                                         FirstName = patient.FirstName,
-                                                         SecondName = patient.SecondName,
-                                                         Address = patient.Address,
-                                                         DateOfBirth = patient.DateOfBirth,
-                                                         Sex = patient.Sex,
-                                                         NumberOfRegion = region.NumberOfRegion
-                                                     };
-
-                return result.Sort(sort);
+                return await _repository.GetPatients(page, sort);
             }
             catch (Exception e)
             {

@@ -24,7 +24,7 @@ namespace WebApplication1.Repositories
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<DoctorsDto>> GetDoctors(int page)
+        public async Task<IEnumerable<GetDoctorsDto>> GetDoctors(int page, string sort)
         {
             List<Doctor> doctors = page > 0
                 ? await _db.Doctors
@@ -33,7 +33,20 @@ namespace WebApplication1.Repositories
                     .ToListAsync()
                 : await _db.Doctors
                     .ToListAsync();
-            return _mapper.Map<List<DoctorsDto>>(doctors);
+
+            IEnumerable<GetDoctorsDto> result = from doctor in doctors
+                   join region in _db.Regions on doctor.RegionId equals region.Id
+                   join specialty in _db.Specialties on doctor.SpecialtyId equals specialty.Id
+                   join cabinet in _db.Cabinets on doctor.CabinetId equals cabinet.Id
+                   select new GetDoctorsDto()
+                   {
+                       FullName = doctor.FullName,
+                       NumberOfRegion = region.NumberOfRegion,
+                       NameOfSpecialty = specialty.NameOfSpecialty,
+                       NumberOfCab = cabinet.NumberOfCab
+                   };
+
+            return result.Sort(sort);
         }
 
         public async Task<GetDoctorByIdDto> GetDoctorById(int id)
@@ -88,21 +101,6 @@ namespace WebApplication1.Repositories
             {
                 return false;
             }
-        }
-
-        public async Task<IEnumerable<Cabinet>> GetCabinets()
-        {
-            return await _db.Cabinets.ToListAsync();
-        }
-
-        public async Task<IEnumerable<Region>> GetRegions()
-        {
-            return await _db.Regions.ToListAsync();
-        }
-
-        public async Task<IEnumerable<Specialty>> GetSpecialties()
-        {
-            return await _db.Specialties.ToListAsync();
         }
     }
 }

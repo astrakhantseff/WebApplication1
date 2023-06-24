@@ -8,14 +8,10 @@ namespace WebApplication1.Repositories
 {
     public interface IDoctorsRepository
     {
-        Task<IEnumerable<DoctorsDto>> GetDoctors(int page);
+        Task<IEnumerable<GetDoctorsDto>> GetDoctors(int page, string sort);
         Task<GetDoctorByIdDto> GetDoctorById(int id);
         Task<DoctorsDto> UpdateDoctor(DoctorsDto doctorDto);
         Task<DoctorsDto> CreateDoctor(DoctorsDto doctorDto);
         Task<bool> DeleteDoctor(int id);
-
-        Task<IEnumerable<Cabinet>> GetCabinets();
-        Task<IEnumerable<Region>> GetRegions();
-        Task<IEnumerable<Specialty>> GetSpecialties();
     }
 }

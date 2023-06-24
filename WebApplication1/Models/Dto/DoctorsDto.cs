@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public string FullName { get; set; }
         public int CabinetId { get; set; }
+        public int Cabinet { get; set; }
         public int SpecialtyId { get; set; }
         public int? RegionId { get; set; }
     }

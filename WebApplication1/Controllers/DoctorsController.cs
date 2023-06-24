@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,29 +24,11 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<GetDoctorsDto>> Get([FromQuery]string sort, [FromQuery] int page)
+        public async Task<IEnumerable<GetDoctorsDto>> Get([FromQuery] int page, [FromQuery] string sort)
         {
             try
             {
-                IEnumerable<DoctorsDto> doctors = await _repository.GetDoctors(page);
-
-                IEnumerable<Cabinet> cabinets = await _repository.GetCabinets();
-                IEnumerable<Region> regions = await _repository.GetRegions();
-                IEnumerable<Specialty> specialties = await _repository.GetSpecialties();
-
-                IEnumerable<GetDoctorsDto> result = from doctor in doctors
-                                                    join cabinet in cabinets on doctor.CabinetId equals cabinet.Id
-                                                    join region in regions on doctor.RegionId equals region.Id
-                                                    join specialty in specialties on doctor.SpecialtyId equals specialty.Id
-                                                    select new GetDoctorsDto()
-                                                    {
-                                                        FullName = doctor.FullName,
-                                                        NumberOfCab = cabinet.NumberOfCab,
-                                                        NumberOfRegion = region.NumberOfRegion,
-                                                        NameOfSpecialty = specialty.NameOfSpecialty
-                                                    };
-                
-                return result.Sort(sort);
+                return await _repository.GetDoctors(page, sort);
             }
             catch (Exception e)
             {

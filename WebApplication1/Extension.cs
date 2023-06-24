@@ -10,7 +10,7 @@ namespace WebApplication1
     {
         public static IEnumerable<GetDoctorsDto> Sort(this IEnumerable<GetDoctorsDto> obj, string orderBy)
         {
-            IEnumerable<GetDoctorsDto> result = orderBy?.ToLower() switch
+            return orderBy?.ToLower() switch
             {
                 "fullname" => obj.OrderBy(column => column.FullName),
                 "cabinet" => obj.OrderBy(column => column.NumberOfCab),
@@ -18,12 +18,11 @@ namespace WebApplication1
                 "specialty" => obj.OrderBy(column => column.NameOfSpecialty),
                 _ => obj
             };
-            return result;
         }
         
         public static IEnumerable<GetPatientsDto> Sort(this IEnumerable<GetPatientsDto> obj, string sort)
         {
-            IEnumerable<GetPatientsDto> result = sort?.ToLower() switch
+            return sort?.ToLower() switch
             {
                 "family" => obj.OrderBy(column => column.Family),
                 "firstname" => obj.OrderBy(column => column.FirstName),
@@ -34,7 +33,6 @@ namespace WebApplication1
                 "numberofregion" => obj.OrderBy(column => column.NumberOfRegion),
                 _ => obj
             };
-            return result;
         }
     }
 }

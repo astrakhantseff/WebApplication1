@@ -24,7 +24,7 @@ namespace WebApplication1.Repositories
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<PatientsDto>> GetPatients(int page)
+        public async Task<IEnumerable<GetPatientsDto>> GetPatients(int page, string sort)
         {
             List<Patient> patients = page > 0
                 ? await _db.Patients
@@ -33,7 +33,21 @@ namespace WebApplication1.Repositories
                     .ToListAsync()
                 : await _db.Patients
                     .ToListAsync();
-            return _mapper.Map<List<PatientsDto>>(patients);
+
+            IEnumerable<GetPatientsDto> result = from patient in patients
+                   join region in _db.Regions on patient.RegionId equals region.Id
+                   select new GetPatientsDto()
+                   {
+                       Family = patient.Family,
+                       FirstName = patient.FirstName,
+                       SecondName = patient.SecondName,
+                       Address = patient.Address,
+                       DateOfBirth = patient.DateOfBirth,
+                       Sex = patient.Sex,
+                       NumberOfRegion = region.NumberOfRegion
+                   };
+
+            return result.Sort(sort);
         }
 
         public async Task<GetPatientByIdDto> GetPatientById(int id)
@@ -88,11 +102,6 @@ namespace WebApplication1.Repositories
             {
                 return false;
             }
-        }
-
-        public async Task<IEnumerable<Region>> GetRegions()
-        {
-            return await _db.Regions.ToListAsync();
         }
     }
 }
